@@ -1,5 +1,5 @@
 {
-  "name": "opensprints race manager",
+  "name": "opensprints-race-manager",
   "version": "0.0.1",
   "description": "opensprints race manager using Crossbar.io with Node.js",
   "main": "node/hello.js",
