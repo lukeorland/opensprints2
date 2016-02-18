@@ -10,11 +10,11 @@
     "crossbario",
     "wamp"
   ],
-  "author": "Tavendo GmbH",
+  "author": "OpenSprints",
   "license": "Apache 2.0",
   "dependencies": {
     "autobahn": "^0.9.5",
     "johnny-five" : "latest",
-    "crossbar": "latest"
+    "nightlife-rabbit": "git://github.com/christian-raedel/nightlife-rabbit.git#master"
   }
 }

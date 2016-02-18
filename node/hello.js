@@ -1,99 +1,84 @@
-///////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (C) 2014, Tavendo GmbH and/or collaborators. All rights reserved.
-//
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//  1. Redistributions of source code must retain the above copyright notice,
-//     this list of conditions and the following disclaimer.
-//
-//  2. Redistributions in binary form must reproduce the above copyright notice,
-//     this list of conditions and the following disclaimer in the documentation
-//     and/or other materials provided with the distribution.
-//
-//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-//  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-//  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-//  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-//  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-//  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-//  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-//  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-//  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-//  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-//  POSSIBILITY OF SUCH DAMAGE.
-//
-///////////////////////////////////////////////////////////////////////////////
+var nightlife  = require('nightlife-rabbit')
+    , autobahn = require('autobahn')
+    , http    = require('http')
+    , fs       = require('fs');
 
-var autobahn = require('autobahn');
+// Create a secure webserver as transport for the WebSocket connections.
+var transport = http.createServer();
 
-var connection = new autobahn.Connection({
-   url: 'ws://127.0.0.1:8080/ws',
-   realm: 'realm1'}
-);
+// Create a router which use previously created webserver,
+// listen on specified port and path and don't create realms
+// automatically when requested. The router constructor itself
+// call the webserver.listen method and reject new sessions,
+// if the requested realm doesn't exists.
+var router = nightlife.createRouter({
+    httpServer: transport,
+    port: 8080,
+    path: '/secure-nightlife',
+    autoCreateRealms: false
+});
 
-connection.onopen = function (session) {
+// Create an example realm.
+router.createRealm('com.example.inge');
 
-   // SUBSCRIBE to a topic and receive events
-   //
-   function onhello (args) {
-      var msg = args[0];
-      console.log("event for 'onhello' received: " + msg);
-   }
-   session.subscribe('com.example.onhello', onhello).then(
-      function (sub) {
-         console.log("subscribed to topic 'onhello'");
-      },
-      function (err) {
-         console.log("failed to subscribed: " + err);
-      }
-   );
+// Create an example service which return a random integer when called.
+// This service maybe runs on a different machine or in the browser.
+var serviceA = new autobahn.Connection({
+    url: 'ws://localhost:8080/secure-nightlife',
+    realm: 'com.example.inge'
+});
 
-
-   // REGISTER a procedure for remote calling
-   //
-   function add2 (args) {
-      var x = args[0];
-      var y = args[1];
-      console.log("add2() called with " + x + " and " + y);
-      return x + y;
-   }
-   session.register('com.example.add2', add2).then(
-      function (reg) {
-         console.log("procedure add2() registered");
-      },
-      function (err) {
-         console.log("failed to register procedure: " + err);
-      }
-   );
-
-
-   // PUBLISH and CALL every second .. forever
-   //
-   var counter = 0;
-   setInterval(function () {
-
-      // PUBLISH an event
-      //
-      session.publish('com.example.oncounter', [counter]);
-      console.log("published to 'oncounter' with counter " + counter);
-
-      // CALL a remote procedure
-      //
-      session.call('com.example.mul2', [counter, 3]).then(
-         function (res) {
-            console.log("mul2() called with result: " + res);
-         },
-         function (err) {
-            if (err.error !== 'wamp.error.no_such_procedure') {
-               console.log('call of mul2() failed: ' + err);
-            }
-         }
-      );
-
-      counter += 1;
-   }, 1000);
+serviceA.onopen = function (session) {
+    session.register('com.example.random', function (args, kwargs, details) {
+        return Math.floor(Math.random() * Math.pow(2, 53));
+    })
+    .then(function (registration) {
+        console.log('service with id %d registered.', registration.id);
+    })
+    .catch(function (err) {
+        console.log('cannot register service!');
+        process.exit(2);
+    })
+    .done();
 };
 
-connection.open();
+serviceA.onclose = function (reason) {
+    console.log('service closed', reason);
+    process.exit(2);
+};
+
+setTimeout(function () {
+    serviceA.open();
+}, 500);
+
+// Create an example service which will populate the
+// current datetime every two secundes.
+// Clients can subscribe to this topic in the same manner.
+var serviceB = new autobahn.Connection({
+    url: 'ws://localhost:8080/secure-nightlife',
+    realm: 'com.example.inge'
+});
+
+serviceB.onopen = function (session) {
+    session.subscribe('com.example.time', function () {})
+    .then(function (subscription) {
+        console.log('subscribed to topic.', subscription.id);
+
+        setInterval(function () {
+            session.publish('com.example.time', [new Date().getTime()]);
+        }, 1927);
+    })
+    .catch(function (err) {
+        console.log('cannot subscribe to topic!', err);
+    })
+    .done();
+};
+
+serviceB.onclose = function (reason) {
+    console.log('service closed', reason);
+    process.exit(2);
+};
+
+setTimeout(function () {
+    serviceB.open();
+}, 500);
