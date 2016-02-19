@@ -5,5 +5,5 @@ var racerTicks;
 var racerIndicators;
 
 hub.on("tick", function() {
-    // TODO
+  // TODO
 });

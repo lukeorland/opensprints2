@@ -1,9 +1,9 @@
 // Exposes websocket connections for starting/stopping a race. Publishes race status updates.
 
 class Race() {
-    distanceTicks = 0;
-    durationSeconds = 0.0;
-    status = nil;
+  distanceTicks = 0;
+  durationSeconds = 0.0;
+  status = nil;
 }
 
 // WAMP Router:
@@ -25,14 +25,13 @@ class Race() {
 // com.opensprints.race
 
 setTimeout(function() {
-    streeem.push({
-            "time-elapsed-ms": race.timeElapsedMs,
-            "racer-ticks": {
-                "0": racers[0].ticks,
-                "1": racers[1].ticks,
-                "2": racers[2].ticks,
-                "3": racers[3].ticks
-            }
-        }
-    );
+  streeem.push({
+    "time-elapsed-ms": race.timeElapsedMs,
+    "racer-ticks": {
+      "0": racers[0].ticks,
+      "1": racers[1].ticks,
+      "2": racers[2].ticks,
+      "3": racers[3].ticks
+    }
+  });
 }, race.config.updatePeriod);
