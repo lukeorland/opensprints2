@@ -2,19 +2,34 @@
   "name": "opensprints-race-manager",
   "version": "0.0.1",
   "description": "opensprints race manager using Crossbar.io with Node.js",
-  "main": "node/hello.js",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukeorland/opensprints2.git"
   },
   "keywords": [
+    "Electron",
     "crossbario",
-    "wamp"
+    "wamp",
+    "OpenSprints"
   ],
   "author": "OpenSprints",
   "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/lukeorland/opensprints2/issues"
+  },
+  "homepage": "https://github.com/lukeorland/opensprints2#readme",
+  "devDependencies": {
+    "electron-prebuilt": "^0.36.0"
+  },
   "dependencies": {
     "autobahn": "^0.9.5",
-    "johnny-five" : "latest",
-    "nightlife-rabbit": "git://github.com/christian-raedel/nightlife-rabbit.git#master"
+    "johnny-five": "latest",
+    "nightlife-rabbit": "git://github.com/christian-raedel/nightlife-rabbit.git#master",
+    "electron-prebuilt": "latest"
   }
 }

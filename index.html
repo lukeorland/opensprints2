@@ -6,10 +6,11 @@
     <script>
         AUTOBAHN_DEBUG = true;
     </script>
-    <script src="http://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
+    <!-- <script src="http://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script> -->
 
     <script>
 
+        var autobahn = require('autobahn');
         // Create a new client connection.
         // See http://autobahn.ws/js/ for reference.
         var client = new autobahn.Connection({

@@ -1,6 +1,32 @@
 # opensprints2
 OpenSprints goldsprints software, rewritten in Node.js.
 
+This is an Electron application based on the [Quick Start Guide](http://electron.atom.io/docs/latest/tutorial/quick-start) within the Electron documentation.
+
+A basic Electron application needs just these files:
+
+- `index.html` - A web page to render.
+- `main.js` - Starts the app and creates a browser window to render HTML.
+- `package.json` - Points to the app's main file and lists its details and dependencies.
+
+You can learn more about each of these components within the [Quick Start Guide](http://electron.atom.io/docs/latest/tutorial/quick-start).
+
+## To Use
+
+To clone and run this repository you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
+
+```bash
+# Clone this repository
+git clone https://github.com/lukeorland/opensprints2
+# Go into the repository
+cd opensprints2
+# Install dependencies and run the app
+npm install && npm start
+```
+
+
+# hub
+
 The *hub* is a
 
 The application running in the client browser controls race logic, such as seconds seconds of countdown, false starts, distance race or time trial, etc. In other words, the hub is completely ignorant of details of the race, including the distance or duration or countdown seconds. It only handles:
