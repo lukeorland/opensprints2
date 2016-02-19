@@ -10,8 +10,11 @@ const BrowserWindow = electron.BrowserWindow; // Module to create native browser
 var nightlife = require('nightlife-rabbit');
 var autobahn = require('autobahn');
 var http = require('http');
+var raceMonitor = require('node/raceMonitor.js');
 
-function wampStuff() {
+function raceInteraction() {
+
+  var myRaceMonitor = raceMonitor.RaceMonitor();
   // Create a secure webserver as transport for the WebSocket connections.
   var transport = http.createServer();
 
@@ -38,23 +41,29 @@ function wampStuff() {
   connection.onopen = function(session) {
 
     // publish an event
-    var counter = 0;
+    const numRacers = 4;
     setInterval(function() {
-      session.publish('com.opensprints.hello', [counter], {}, {
+      session.publish('com.opensprints.race.ticks', myRaceMonitor.ticksForRacers, {}, {
           acknowledge: true
         })
         .then(
 
           function(publication) {
-            //console.log("published, publication ID is ", publication);
+            console.log("published, publication ID is ", publication);
           },
 
           function(error) {
             console.log("publication error", error);
           }
         );
-      counter += 1;
     }, 200);
+
+    // session.register('com.opensprints.race.start')
+    //   myRaceMonitor.start();
+    //   session.publish('com.opensprints.race.state', {'state': 'started'})
+    // session.register('com.opensprints.race.stop')
+    //   myRaceMonitor.stop();
+    //   session.publish('com.opensprints.race.state', {'state': 'stopped'})
   };
 
   connection.open();
@@ -96,5 +105,5 @@ app.on('ready', function() {
     mainWindow = null;
   });
 
-  wampStuff();
+  raceInteraction();
 });

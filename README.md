@@ -124,12 +124,12 @@ or
 
 ```json
 {
-    "race-indicators": {
-        "0": "green",
-        "1": "red",
-        "2": "green",
-        "3": "red",
-    }
+    "race-indicators": [
+        "green",
+        "red",
+        "green",
+        "red"
+    ]
 }
 ```
 
@@ -139,17 +139,32 @@ or
 - More about WAMP and Node.js: http://crossbar.io/docs/Getting-started-with-NodeJS/
 
 
-While the race `"state"` is `"started"`, the *hub* publishes status messages on the websocket:
+At the moment when the race `"state"` is `"started"` or `"stopped"`, the
+*hub* publishes a message on the websocket at uri com.opensprints.race.state:
+
+```json
+{
+    "state": "started",
+    "update-period-ms": 50
+}
+
+```
+
+```json
+{
+    "state": "stopped",
+    "update-period-ms": 500
+}
+
+```
+
+While the race `"state"` is `"started"`, the *hub* publishes status messages on
+the websocket at uri com.opensprints.race.ticks:
 
 ```json
 {
     "time-elapsed-ms": 12345,
-    "racer-ticks": {
-        "0": 42,
-        "1": 43,
-        "2": 44,
-        "3": 40
-    }
+    "racer-ticks": [42, 44, 43, 47]
 }
 ```
 
@@ -157,12 +172,7 @@ The initial status message will match the following:
 ```json
 {
     "time-elapsed-ms": 0,
-    "racer-ticks": {
-        "0": 0,
-        "1": 0,
-        "2": 0,
-        "3": 0
-    }
+    "racer-ticks": [0, 0, 0, 0]
 }
 ```
 

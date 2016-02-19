@@ -22,8 +22,8 @@
     client.onopen = function(session) {
 
       // subscribe to a topic
-      session.subscribe('com.opensprints.hello', function(args) {
-          //console.log("Event:", args[0]);
+      session.subscribe('com.opensprints.race.ticks', function(args) {
+          console.log("Event:", args[0]);
         })
         .catch(function(err) {
           console.log('cannot subscribe to topic!', err);
