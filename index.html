@@ -5,6 +5,7 @@
   <p>Open JavaScript console to watch output.</p>
   <script>
     AUTOBAHN_DEBUG = true;
+
   </script>
 
   <script>
@@ -12,26 +13,17 @@
     // Create a new client connection.
     // See http://autobahn.ws/js/ for reference.
     var client = new autobahn.Connection({
-      url: 'ws://localhost:8080/secure-nightlife',
-      realm: 'com.example.inge'
+      url: 'ws://localhost:9000/ws',
+      realm: 'realm1'
     });
 
     // When client session is established, call 'random integer' service
     // and subscribe to 'time' event.
     client.onopen = function(session) {
-      setInterval(function() {
-        session.call('com.example.random')
-          .then(function(random) {
-            console.log('random integer:', random);
-          })
-          .catch(function(err) {
-            console.log('cannot call random service!', err);
-          })
-          .done();
-      }, 1800);
 
-      session.subscribe('com.example.time', function(args, kwargs, details) {
-          console.log('current system time:', new Date(args[0]));
+      // subscribe to a topic
+      session.subscribe('com.opensprints.hello', function(args) {
+          //console.log("Event:", args[0]);
         })
         .catch(function(err) {
           console.log('cannot subscribe to topic!', err);
@@ -41,6 +33,7 @@
 
     // Open client connection.
     client.open();
+
   </script>
 </body>
 
