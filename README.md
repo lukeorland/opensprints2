@@ -1,16 +1,16 @@
 # opensprints2
-OpenSprints goldsprints software, rewritten in Node.js.
 
+OpenSprints goldsprints software, rewritten in Node.js.
 
 ## To Use
 
-
 ### Initial setup
+
 To clone and run this repository you'll need [Git](https://git-scm.com) and
 [Node.js](https://nodejs.org/en/download/) (which comes with
 [npm](http://npmjs.com)) installed on your computer. From your command line:
 
-```bash
+```sh
 # Clone this repository
 git clone https://github.com/lukeorland/opensprints2
 # Go into the repository
@@ -26,7 +26,9 @@ Make sure the Arduino has been flashed with the
 
 Make sure the Arduino is connected. Then run:
 
-     node hub-cli.js
+```sh
+node hub-cli.js
+```
 
 When the magnet is passed by the sensor, update messages should be printed to
 the terminal.
