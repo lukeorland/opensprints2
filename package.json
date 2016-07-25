@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/lukeorland/opensprints2#readme",
   "dependencies": {
-    "johnny-five": "latest"
+    "johnny-five": "latest",
+    "firmata": "^0.12.0",
+    "serialport": "^3.0.0"
   }
 }
