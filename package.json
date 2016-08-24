@@ -1,0 +1,24 @@
+{
+  "name": "opensprints-race-manager",
+  "version": "0.0.1",
+  "description": "OpenSprints race manager",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukeorland/opensprints2.git"
+  },
+  "keywords": [
+    "OpenSprints"
+  ],
+  "author": "OpenSprints",
+  "license": "TBD",
+  "bugs": {
+    "url": "https://github.com/lukeorland/opensprints2/issues"
+  },
+  "homepage": "https://github.com/lukeorland/opensprints2#readme",
+  "dependencies": {
+    "johnny-five": "latest",
+    "firmata": "^0.12.0",
+    "serialport": "^3.0.0"
+  }
+}
